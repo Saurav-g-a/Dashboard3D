@@ -7,8 +7,6 @@ import PropTypes from "prop-types";
 
 // components
 
-import TableDropdown from "components/Dropdowns/TableDropdown.js";
-
 export default function CardTable({ color }) {
   const [name, setName] = useState("");
   const [publish, setPublish] = useState(false);
@@ -20,13 +18,23 @@ export default function CardTable({ color }) {
   const [embed_code, setEmbed_code] = useState("");
   const [tag, setTag] = useState("");
   const [product, setProduct] = useState([]);
+  const [file, setCSV] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showpopup, setshowpopup] = useState(false);
   const openModal = () => {
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const openModal1 = () => {
+    setshowpopup(true);
+  };
+
+  const closepopup = () => {
+    setshowpopup(false);
   };
 
   const [show1, setShowModal1] = useState(false);
@@ -71,12 +79,28 @@ export default function CardTable({ color }) {
     axios
       .post("http://localhost/3d-backend/api/add-product", fd)
       .then((res) => {
-        console.log(res);
-        toast.success("Product Save Successfully!");
+        toast.success("Product Saved Successfully!");
         get_products();
         setShowModal(false);
       });
   };
+
+  const handleSubmit1 = (event) => {
+    let item = { file };
+    event.preventDefault();
+    const fd = new FormData();
+    fd.append("file", file);
+
+    axios.post("http://localhost/3d-backend/api/csv_file", fd).then((res) => {
+      toast.success("CSV Saved Successfully!");
+      get_products();
+      setshowpopup(false);
+    });
+  };
+
+  //  const handleView = (id) => (e) => {
+
+  //  }
 
   const handleSwitch = (id) => (e) => {
     const fd = new FormData();
@@ -84,7 +108,6 @@ export default function CardTable({ color }) {
     axios
       .post("http://localhost/3d-backend/api/edit-publish/" + id, fd)
       .then((res) => {
-        console.log(res);
         toast.success(res.data.message);
         get_products();
         // setSwitch(id);
@@ -94,8 +117,8 @@ export default function CardTable({ color }) {
 
   const onChange = (event) => {
     const { name, value } = event.target;
-    console.log(name);
-    console.log(value);
+    // console.log(name);
+    // console.log(value);
     setForm((prevState) => ({
       ...prevState, // shallow copy all previous state
       [name]: value, // update specific key/value
@@ -103,7 +126,7 @@ export default function CardTable({ color }) {
   };
 
   const handleShow1 = (data) => () => {
-    console.log(data);
+    // console.log(data);
     setForm({
       name: data.name,
       title: data.title,
@@ -119,8 +142,8 @@ export default function CardTable({ color }) {
 
   /** -------------------------------------------Edit Product------------------------------------------ */
   const editInfo = (event) => {
-    console.log(form.publish);
-    console.log(publish);
+    // console.log(form.publish);
+    // console.log(publish);
     let published = publish == true ? 1 : 0;
     const fd = new FormData();
 
@@ -136,7 +159,7 @@ export default function CardTable({ color }) {
     axios
       .post("http://localhost/3d-backend/api/edit-products/" + increament, fd)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast.success(res.data.message);
         get_products();
         setShowModal2(false);
@@ -149,7 +172,7 @@ export default function CardTable({ color }) {
       .then(
         (response) => {
           // this only runs on success
-          console.log("RESPONSE FROM POST", response.data);
+          // console.log("RESPONSE FROM POST", response.data);
           toast.success(response.data.Message);
           setShow2(false, {
             id: null,
@@ -158,6 +181,7 @@ export default function CardTable({ color }) {
         },
         (err) => {
           console.log("Error While Posting Data", err);
+          toast.warning(err);
         }
       );
   };
@@ -169,7 +193,7 @@ export default function CardTable({ color }) {
     fetch("http://localhost/3d-backend/api/get-products")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setProduct(data.products);
       })
       .catch((err) => {
@@ -194,7 +218,7 @@ export default function CardTable({ color }) {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -229,6 +253,13 @@ export default function CardTable({ color }) {
               type="button"
             >
               Add Product
+            </button>
+            <button
+              onClick={openModal1}
+              className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              type="button"
+            >
+              Upload CSV
             </button>
           </div>
         </div>
@@ -345,6 +376,13 @@ export default function CardTable({ color }) {
                             className={"fas fa-pencil-alt text-sm text-white"}
                           ></i>{" "}
                         </button>
+                        <button
+                          // onClick={handleView(item.id)}
+                          className="text-white p-2 bg-indigo-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-indigo-500 focus:outline-none dark:focus:ring-blue-800"
+                          type="button"
+                        >
+                          <i className={"fas fa-eye text-sm text-white"}></i>{" "}
+                        </button>
                       </td>
                     </tr>
                   );
@@ -353,6 +391,7 @@ export default function CardTable({ color }) {
           </table>
         </div>
       </div>
+      {/* Add Product Modal  */}
 
       {showModal && (
         <div
@@ -521,7 +560,79 @@ export default function CardTable({ color }) {
                   type="submit"
                   className="w-full text-white bg-indigo-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-indigo-500 dark:focus:ring-blue-800"
                 >
-                  Save Changes
+                  Save
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add CSV Product Modal  */}
+
+      {showpopup && (
+        <div
+          id="defaultModal"
+          tabIndex="-1"
+          aria-hidden="true"
+          className="fixed top-95-px left-50 z-50  w-1/2 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+        >
+          <div className="relative w-full max-w-2xl max-h-full">
+            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+              <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Add Product
+                </h3>
+                <button
+                  type="button"
+                  onClick={closepopup}
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                  data-modal-hide="defaultModal"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
+              </div>
+
+              <form
+                className="space-y-6 p-5"
+                action="#"
+                onSubmit={handleSubmit1}
+                pvalidation
+              >
+                <div className="mb-4 mr-4">
+                  <label
+                    for="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Upload CSV
+                  </label>
+                  <input
+                    type="file"
+                    value={""}
+                    onChange={(e) => setCSV(e.target.files[0])}
+                    name="file"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full text-white bg-indigo-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-indigo-500 dark:focus:ring-blue-800"
+                >
+                  Save
                 </button>
               </form>
             </div>

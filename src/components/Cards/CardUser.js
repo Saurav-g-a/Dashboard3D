@@ -23,7 +23,7 @@ export default function CardUser({ color }) {
   const [form, setForm] = useState(fields);
 
   const handleShow1 = (data) => () => {
-    console.log(data);
+    // console.log(data);
     setForm({
       name: data.name,
       email: data.email,
@@ -35,7 +35,7 @@ export default function CardUser({ color }) {
   /**--------------------------------------------Edit Users-------------------------------------------------- */
 
   const editUser = (event) => {
-    console.log(form);
+    // console.log(form);
     const fd = new FormData();
     fd.append("name", form.name);
     fd.append("email", form.email);
@@ -43,7 +43,7 @@ export default function CardUser({ color }) {
     axios
       .post("http://localhost/3d-backend/api/edit-user/" + form.id, fd)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast.success(res.data.message);
         get_users();
         setShow1(false);
@@ -54,8 +54,8 @@ export default function CardUser({ color }) {
 
   const onChange = (event) => {
     const { name, value } = event.target;
-    console.log(name);
-    console.log(value);
+    // console.log(name);
+    // console.log(value);
     setForm((prevState) => ({
       ...prevState, // shallow copy all previous state
       [name]: value, // update specific key/value
@@ -75,7 +75,7 @@ export default function CardUser({ color }) {
     axios
       .post("http://localhost/3d-backend/api/edit-grant/" + id, fd)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast.success(res.data.message);
         get_users();
       });
@@ -91,15 +91,16 @@ export default function CardUser({ color }) {
     fetch("http://localhost/3d-backend/api/user_info")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setUsers(data.users);
       })
       .catch((err) => {
-        console.log(err.message);
+        // console.log(err.message);
+        toast.error("Register error ");
       });
   };
   const [users, setUsers] = useState([]);
-  console.log(users);
+  // console.log(users);
   const handleDeleteTrue = (event) => {
     // console.log(show2.id)
     axios
@@ -107,7 +108,7 @@ export default function CardUser({ color }) {
       .then(
         (response) => {
           // this only runs on success
-          console.log("RESPONSE FROM POST", response.data);
+          // console.log("RESPONSE FROM POST", response.data);
           toast.success(response.data.Message);
           setShow2(false, {
             id: null,
@@ -115,7 +116,8 @@ export default function CardUser({ color }) {
           get_users();
         },
         (err) => {
-          console.log("Error While Posting Data", err);
+          toast.error("Register error ");
+          // console.log("Error While Posting Data", err);
         }
       );
   };

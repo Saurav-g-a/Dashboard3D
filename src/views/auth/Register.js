@@ -20,18 +20,18 @@ export default function Register() {
   const handleSubmit = (event) => {
     let item = { name, email, password, c_password };
     event.preventDefault();
-    console.log(item);
+    // console.log(item);
     setError(rvalidation(item));
 
     axios.post("http://localhost/3d-backend/api/register", item).then(
       (res) => {
         // this only runs on success
-        console.log("RESPONSE FROM POST", res.data);
+        // console.log("RESPONSE FROM POST", res.data);
         toast.success("Register success Please verify your email ");
         window.location.href = "/admin/dashboard"; // Redirect to dashboard page
       },
       (err) => {
-        console.log("Error While Posting Data", err);
+        // console.log("Error While Posting Data", err);
         toast.error("Register error ");
       }
     );

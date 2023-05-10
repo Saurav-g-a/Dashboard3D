@@ -13,24 +13,20 @@ export default function Forgot() {
   // const [validated, setValidated] = useState(false);
   let history = useHistory();
   const handleSubmit = (event) => {
-    // event.preventDefault();
-    // let item = { email };
-    // console.log(item);
-    // setError(validation(item));
-    // axios.post("http://localhost/3d-backend/api/login", item).then(
-    //   (res) => {
-    //     console.log("RESPONSE FROM POST", res.data);
-    //     toast.success("Login success");
-    //     localStorage.setItem("Token", res.data.success.token);
-    //     console.log(res.data.success.token);
-    //     setIsLoggedin(true);
-    //     history.push("/admin/dashboard");
-    //   },
-    //   (err) => {
-    //     console.log("Error While Posting Data", err);
-    //     toast.error("Invalid Credentials");
-    //   }
-    // );
+    event.preventDefault();
+    let item = { email, password, c_password };
+    console.log(item);
+    axios.post("http://localhost/3d-backend/api/forget-password", item).then(
+      (res) => {
+        console.log("RESPONSE FROM POST", res.data);
+        toast.success("Password Reset success");
+        history.push("/login");
+      },
+      (err) => {
+        console.log("Error While Posting Data", err);
+        toast.error("Invalid Credentials");
+      }
+    );
   };
   const passwordsMatch = () => {
     return password === c_password;

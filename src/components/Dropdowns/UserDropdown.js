@@ -1,29 +1,23 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { createPopper } from "@popperjs/core";
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login from "views/auth/Login";
 
 const UserDropdown = () => {
   // let user = JSON.parse(localStorage.getItem("Token"));
   // console.log("here", user);
-  const [logoutMessage, setLogoutMessage] = useState("");
   let history = useHistory();
   const handleLogout = async (e) => {
     e.preventDefault();
 
     try {
-      const response = {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("Token"),
-        },
-      };
-      setLogoutMessage(response.data.message);
+      // Remove the token from local storage
+      localStorage.removeItem("Token");
+      // setIsLoggedin(false);
+      toast.success("Logout Successfully !! ");
       history.push("/login");
-
       // perform any additional logic here after successful logout
     } catch (error) {
       console.error(error);

@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "chart.js";
 
 export default function CardBarChart() {
+  const [usercount, setUsercount] = useState([]);
+  const get_statisticks = (event) => {
+    fetch("http://localhost/3d-backend/api/get_users_statisticks")
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log(data);
+        setUsercount(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+  useEffect(() => {
+    get_statisticks();
+  }, []);
+
   React.useEffect(() => {
     let config = {
       type: "bar",
@@ -14,22 +30,19 @@ export default function CardBarChart() {
           "May",
           "June",
           "July",
+          "August",
+          "Septmber",
+          "October",
+          "November",
+          "December",
         ],
         datasets: [
           {
             label: new Date().getFullYear(),
             backgroundColor: "#ed64a6",
             borderColor: "#ed64a6",
-            data: [30, 78, 56, 34, 100, 45, 13],
+            data: usercount,
             fill: false,
-            barThickness: 8,
-          },
-          {
-            label: new Date().getFullYear() - 1,
-            fill: false,
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
-            data: [27, 68, 86, 74, 10, 4, 87],
             barThickness: 8,
           },
         ],
@@ -39,7 +52,7 @@ export default function CardBarChart() {
         responsive: true,
         title: {
           display: false,
-          text: "Orders Chart",
+          text: "Monthly User Analytic",
         },
         tooltips: {
           mode: "index",

@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import validation from "views/validations/login-validations";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,19 +18,19 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     let item = { email, password };
-    console.log(item);
+    // console.log(item);
     setError(validation(item));
     axios.post("http://localhost/3d-backend/api/login", item).then(
       (res) => {
         console.log("RESPONSE FROM POST", res.data);
         toast.success("Login success");
         localStorage.setItem("Token", res.data.success.token);
-        console.log(res.data.success.token);
+        // console.log(res.data.success.token);
         setIsLoggedin(true);
         history.push("/admin/dashboard");
       },
       (err) => {
-        console.log("Error While Posting Data", err);
+        // console.log("Error While Posting Data", err);
         toast.error("Invalid Credentials");
       }
     );
@@ -147,3 +148,6 @@ export default function Login() {
     </>
   );
 }
+// Login.propTypes = {
+//   isLoggedin: PropTypes.boolean,
+// };

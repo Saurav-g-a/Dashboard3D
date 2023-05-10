@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // components
 
 import CardStats from "components/Cards/CardStats.js";
 
 export default function HeaderStats() {
+  const [product, setProduct] = useState([]);
+  const [publish, setPublish] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [active, setActive] = useState([]);
+
+  const get_products = (event) => {
+    fetch("http://localhost/3d-backend/api/get_counts")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setProduct(data.products);
+        setUsers(data.users);
+        setPublish(data.publish);
+        setActive(data.active);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+  useEffect(() => {
+    get_products();
+  }, []);
   return (
     <>
       {/* Header */}
@@ -13,10 +35,10 @@ export default function HeaderStats() {
           <div>
             {/* Card stats */}
             <div className="flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4">
+              <div className="w-1/2 lg:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Products"
-                  statTitle="10"
+                  statTitle={product}
                   statArrow="up"
                   statPercent="3.48"
                   statPercentColor="text-emerald-500"
@@ -25,10 +47,34 @@ export default function HeaderStats() {
                   statIconColor="bg-red-500"
                 />
               </div>
-              <div className="w-full lg:w-6/12 px-4">
+              <div className="w-1/2 lg:w-3/12 px-4">
                 <CardStats
                   statSubtitle="USERS"
-                  statTitle="2,356"
+                  statTitle={users}
+                  statArrow="down"
+                  statPercent="3.48"
+                  statPercentColor="text-red-500"
+                  statDescripiron="Since last week"
+                  statIconName="fas fa-users"
+                  statIconColor="bg-orange-500"
+                />
+              </div>
+              <div className="w-1/2 lg:w-3/12 px-4">
+                <CardStats
+                  statSubtitle="Active Users"
+                  statTitle={active}
+                  statArrow="down"
+                  statPercent="3.48"
+                  statPercentColor="text-red-500"
+                  statDescripiron="Since last week"
+                  statIconName="fas fa-users"
+                  statIconColor="bg-orange-500"
+                />
+              </div>
+              <div className="w-1/2 lg:w-3/12 px-4">
+                <CardStats
+                  statSubtitle="Published Products"
+                  statTitle={publish}
                   statArrow="down"
                   statPercent="3.48"
                   statPercentColor="text-red-500"
