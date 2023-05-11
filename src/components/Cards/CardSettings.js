@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // components
 
 export default function CardSettings() {
+  const { users, setUsers } = useState();
+  const get_users = (event) => {
+    fetch("http://localhost/3d-backend/api/user_info")
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
+        setUsers(data.users);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        //toast.error("Register error ");
+      });
+  };
+
+  useEffect(() => {
+    get_users();
+  }, []);
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
