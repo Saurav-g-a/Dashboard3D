@@ -64,7 +64,16 @@ export default function CardTable({ color }) {
 
   const handleSubmit = (event) => {
     let published = publish ? 1 : 0;
-    let item = { name, title, image, description, embed_code, tag, published };
+    let item = {
+      name,
+      title,
+      image,
+      description,
+      embed_code,
+      tag,
+      published,
+      value,
+    };
     const fd = new FormData();
     fd.append("name", name);
     fd.append("title", title);
@@ -72,7 +81,8 @@ export default function CardTable({ color }) {
     fd.append("description", description);
     fd.append("embed_code", embed_code);
     fd.append("tag", tag);
-    fd.append("published", published);
+    fd.append("gallery_type", value);
+    fd.append("publish", published);
     event.preventDefault();
     setError(pvalidation(item));
 
@@ -153,6 +163,7 @@ export default function CardTable({ color }) {
     fd.append("description", form.description);
     fd.append("embed_code", form.embed_title);
     fd.append("tag", form.tag);
+    fd.append("gallery_type", form.value);
     fd.append("published", publish ? publish : form.publish);
     event.preventDefault();
     // return false;
@@ -214,6 +225,20 @@ export default function CardTable({ color }) {
       id,
     });
   };
+
+  const [value, setValue] = useState("");
+
+  const options = [
+    { label: "Gallery One", value: 1 },
+    { label: "Gallery Two", value: 2 },
+    { label: "Gallery Three", value: 3 },
+    { label: "Gallery Four", value: 4 },
+  ];
+
+  function handleSelect(e) {
+    setValue(e.target.value);
+  }
+
   return (
     <>
       <ToastContainer
@@ -506,6 +531,24 @@ export default function CardTable({ color }) {
                       required
                     />
                   </div>
+                </div>
+                <div className="mb-4">
+                  <label
+                    for="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Gallery
+                  </label>
+                  <select
+                    class="form-select"
+                    name="gallery_type"
+                    aria-label="Default select example"
+                    onChange={handleSelect}
+                  >
+                    {options.map((option) => (
+                      <option value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label
@@ -811,6 +854,26 @@ export default function CardTable({ color }) {
                         required
                       />
                     </div>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      for="email"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Gallery
+                    </label>
+                    <select
+                      class="form-select"
+                      name="gallery_type"
+                      aria-label="Default select example"
+                      onChange={handleSelect}
+                    >
+                      {options.map((option) => (
+                        <option value={option.value}>
+                          {option.form.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="mb-4">
                     <label
