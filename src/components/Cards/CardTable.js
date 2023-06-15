@@ -96,10 +96,11 @@ export default function CardTable({ color }) {
   };
 
   const handleSubmit1 = (event) => {
-    let item = { file };
+    let item = { file, value };
     event.preventDefault();
     const fd = new FormData();
     fd.append("file", file);
+    fd.append("gallery_type", value);
 
     axios.post("http://localhost/3d-backend/api/csv_file", fd).then((res) => {
       toast.success("CSV Saved Successfully!");
@@ -229,10 +230,10 @@ export default function CardTable({ color }) {
   const [value, setValue] = useState("");
 
   const options = [
-    { label: "Gallery One", value: 1 },
-    { label: "Gallery Two", value: 2 },
-    { label: "Gallery Three", value: 3 },
-    { label: "Gallery Four", value: 4 },
+    { label: "Gallery One", value: "gallery_type-1" },
+    { label: "Gallery Two", value: "gallery_type-2" },
+    { label: "Gallery Three", value: "gallery_type-3" },
+    { label: "Gallery Four", value: "gallery_type-4" },
   ];
 
   function handleSelect(e) {
@@ -532,36 +533,38 @@ export default function CardTable({ color }) {
                     />
                   </div>
                 </div>
-                <div className="mb-4">
-                  <label
-                    for="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Gallery
-                  </label>
-                  <select
-                    class="form-select"
-                    name="gallery_type"
-                    aria-label="Default select example"
-                    onChange={handleSelect}
-                  >
-                    {options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label
-                    for="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Product Image
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  />
+                <div className="flex">
+                  <div className="mb-4 w-1/2 mr-4">
+                    <label
+                      for="email"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Gallery
+                    </label>
+                    <select
+                      class="form-select form-control bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      name="gallery_type"
+                      aria-label="Default select example"
+                      onChange={handleSelect}
+                    >
+                      {options.map((option) => (
+                        <option value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4 w-1/2 ">
+                    <label
+                      for="email"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Product Image
+                    </label>
+                    <input
+                      type="file"
+                      onChange={(e) => setImage(e.target.files[0])}
+                      className="bg-gray-50 border border-dark text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    />
+                  </div>
                 </div>
                 <div className="mb-4">
                   <label
@@ -659,13 +662,31 @@ export default function CardTable({ color }) {
                     for="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
+                    Gallery Type
+                  </label>
+                  <select
+                    class="form-select bg-gray-50 border border-dark text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    name="gallery_type"
+                    aria-label="Default select example"
+                    onChange={handleSelect}
+                  >
+                    {options.map((option) => (
+                      <option value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-4 mr-4">
+                  <label
+                    for="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
                     Upload CSV
                   </label>
                   <input
                     type="file"
                     onChange={(e) => setCSV(e.target.files[0])}
                     name="file"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-50 border border-dark text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   />
                 </div>
 
